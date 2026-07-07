@@ -30,6 +30,17 @@ claude mcp add --transport http praesago https://www.praesago.com/api/mcp
 **Cursor / other clients:** add a remote server with transport `http` and the
 URL above.
 
+**Local stdio (any MCP client, or air-gapped configs):** this repo ships a
+zero-dependency stdio proxy to the hosted endpoint:
+
+```bash
+python server.py                       # Python 3.9+, no pip install needed
+# or
+docker build -t praesago-mcp . && docker run -i praesago-mcp
+```
+
+Set `PRAESAGO_API_KEY` in the environment to unlock full area context.
+
 ## Tools
 
 | Tool | Access | What it does |
