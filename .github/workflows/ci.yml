@@ -46,7 +46,7 @@ jobs:
 
       - name: tools/call returns real data
         run: |
-          echo '{\"jsonrpc\":\"2.0\",\"id\":3,\"method\":\"tools/call\",\"params\":{\"name\":\"get_area_score\",\"arguments\":{\"area\":\"E17\"}}}' \
+          echo '{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"get_area_score","arguments":{"area":"E17"}}}' \
             | python server.py > call.json
           python -c "
           import json; r = json.load(open('call.json'))
