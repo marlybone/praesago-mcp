@@ -46,9 +46,10 @@ claude mcp add --transport http praesago https://praesago.com/api/mcp
 URL above.
 
 **Local stdio (any MCP client, or air-gapped configs):** this repo ships a
-zero-dependency stdio proxy to the hosted endpoint:
+zero-dependency stdio proxy to the hosted endpoint, in both runtimes:
 
 ```bash
+node server.js                         # Node 18+, no npm install needed
 python server.py                       # Python 3.9+, no pip install needed
 # or
 docker build -t praesago-mcp . && docker run -i praesago-mcp
