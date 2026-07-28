@@ -16,6 +16,21 @@ https://www.praesago.com/api/mcp
 
 Transport: Streamable HTTP (JSON-RPC 2.0, protocol `2025-03-26`).
 
+## Tools
+
+| Tool | What it answers |
+|---|---|
+| `get_area_score` | Trajectory Score (0-100), percentile, gentrification stage, backtested calibration |
+| `get_market_pulse` | **Live asking market**: active listings, price reductions, median asking, time on market |
+| `get_area_context` | Full district profile: demographics, income, tenure, IMD, health, education, broadband, flood risk, prices |
+| `search_areas` | Screen districts by score, region and price ceiling |
+| `compare_areas` | Two districts side by side |
+| `search` / `fetch` | ChatGPT deep-research compatible aliases |
+
+`get_market_pulse` is collected weekly from property portals and exists
+nowhere else: Land Registry reports completions months after the fact, and
+the portals themselves do not publish reduction rates or time-on-market.
+
 ## Connect
 
 **Claude (web / desktop):** Settings → Connectors → Add custom connector →
