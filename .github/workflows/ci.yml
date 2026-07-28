@@ -1,0 +1,70 @@
+name: CI
+
+# Glama's maintenance score reads CI status, but the real reason this exists
+# is the 308 bug: server.py pointed at www.praesago.com, which permanently
+# redirects to the apex, and urllib refuses to follow a 308 on POST. Every
+# install was broken and nothing caught it. This runs the actual handshake
+# against the live endpoint, so a hostname or transport regression fails here
+# instead of silently on a stranger's machine.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    # Weekly: the upstream endpoint can break without this repo changing.
+    - cron: '0 9 * * 1'
+
+jobs:
+  proxy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: initialize handshake
+        run: |
+          echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"ci","version":"1"}}}' \
+            | python server.py > out.json
+          cat out.json
+          python -c "
+          import json; r = json.load(open('out.json'))
+          assert 'error' not in r, r['error']
+          assert r['result']['serverInfo']['name'] == 'praesago', r
+          print('initialize OK')"
+
+      - name: tools/list returns tools
+        run: |
+          echo '{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}' \
+            | python server.py > tools.json
+          python -c "
+          import json; t = json.load(open('tools.json'))['result']['tools']
+          assert len(t) >= 5, f'only {len(t)} tools'
+          print(f'{len(t)} tools:', ', '.join(x['name'] for x in t))"
+
+      - name: tools/call returns real data
+        run: |
+          echo '{\"jsonrpc\":\"2.0\",\"id\":3,\"method\":\"tools/call\",\"params\":{\"name\":\"get_area_score\",\"arguments\":{\"area\":\"E17\"}}}' \
+            | python server.py > call.json
+          python -c "
+          import json; r = json.load(open('call.json'))
+          assert 'error' not in r, r['error']
+          text = r['result']['content'][0]['text']
+          assert 'Praesago Trajectory Index' in text, text[:200]
+          print('tools/call OK')"
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: build and handshake through the image
+        run: |
+          docker build -t praesago-mcp .
+          echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"ci","version":"1"}}}' \
+            | docker run -i --rm praesago-mcp > out.json
+          python3 -c "
+          import json; r = json.load(open('out.json'))
+          assert 'error' not in r, r['error']
+          print('docker image OK')"
