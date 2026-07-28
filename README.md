@@ -1,5 +1,7 @@
 # Praesago MCP Server
 
+[![praesago-mcp MCP server](https://glama.ai/mcp/servers/marlybone/praesago-mcp/badges/score.svg)](https://glama.ai/mcp/servers/marlybone/praesago-mcp)
+
 UK property area intelligence inside Claude, ChatGPT, Cursor or any MCP client.
 
 Ask your AI assistant "is Walthamstow up and coming?" or "find areas in the
