@@ -1,42 +1,33 @@
 # Praesago MCP Server
 
-[![praesago-mcp MCP server](https://glama.ai/mcp/servers/marlybone/praesago-mcp/badges/score.svg)](https://glama.ai/mcp/servers/marlybone/praesago-mcp)
+UK property area data for England and Wales, for AI assistants and developers. Ask Claude, ChatGPT, Cursor or any MCP client for the facts about an area: sold prices, rents, crime, flood risk, schools, deprivation and the live listings market. Every figure carries its source year or date. It describes areas as they are and does not forecast prices.
 
-UK property area intelligence inside Claude, ChatGPT, Cursor or any MCP client.
-
-Ask your AI assistant "is Walthamstow up and coming?" or "find areas in the
-North West under £250k with strong fundamentals" and get live, validated
-answers from Praesago's data — 2,292 England & Wales postcode districts scored
-monthly from 30+ government data sources (Land Registry, ONS, police.uk, EPC,
-planning registers and more).
-
-This is a **hosted (remote) MCP server** — no install, no local process.
+This is a **hosted (remote) MCP server**. There is nothing to install.
 
 ```
 https://praesago.com/api/mcp
 ```
 
-Transport: Streamable HTTP (JSON-RPC 2.0, protocol `2025-03-26`).
+Transport: Streamable HTTP (JSON-RPC 2.0).
 
 ## Tools
 
 | Tool | What it answers |
 |---|---|
-| `get_area_score` | Trajectory Score (0-100), percentile, gentrification stage, backtested calibration |
-| `get_market_pulse` | **Live asking market**: active listings, price reductions, median asking, time on market |
-| `get_area_context` | Full district profile: demographics, income, tenure, IMD, health, education, broadband, flood risk, prices |
-| `search_areas` | Screen districts by score, region and price ceiling |
-| `compare_areas` | Two districts side by side |
-| `search` / `fetch` | ChatGPT deep-research compatible aliases |
+| `get_area_overview` | Headline facts for a postcode, district or place name: median sold price and 12-month change, income, population, private renters, deprivation, flood risk, broadband, council tax, live listings and rents, rental yield, crime and road casualties |
+| `get_area_context` | The deeper profile of about 30 sections (demographics, tenure, health, schools, noise, green space, politics, local economy) |
+| `get_area_profile` | Figures for a whole local authority, added up over its postcode districts |
+| `screen_areas` | Screen districts by price, asking rent, listings, price-cut share and region (including Wales) |
+| `search_areas` | Screen districts by price and region |
+| `compare_areas` | Two areas side by side |
+| `get_market_pulse` | Live asking market: active listings, price reductions, median asking price, time on market |
+| `search` / `fetch` | Aliases for ChatGPT deep-research connectors |
 
-`get_market_pulse` is collected weekly from property portals and exists
-nowhere else: Land Registry reports completions months after the fact, and
-the portals themselves do not publish reduction rates or time-on-market.
+Coverage: England and Wales. Scotland and Northern Ireland are not covered.
 
 ## Connect
 
-**Claude (web / desktop):** Settings → Connectors → Add custom connector →
-paste the URL above.
+**Claude (web or desktop):** Settings, Connectors, Add custom connector, paste the URL above.
 
 **Claude Code:**
 
@@ -44,59 +35,29 @@ paste the URL above.
 claude mcp add --transport http praesago https://praesago.com/api/mcp
 ```
 
-**Cursor / other clients:** add a remote server with transport `http` and the
-URL above.
+**Cursor and other clients:** add a remote server with transport `http` and the URL above.
 
-**Local stdio (any MCP client, or air-gapped configs):** this repo ships a
-zero-dependency stdio proxy to the hosted endpoint, in both runtimes:
+**Local stdio (any MCP client):** this repo includes a zero-dependency stdio proxy to the hosted endpoint.
 
 ```bash
-node server.js                         # Node 18+, no npm install needed
-python server.py                       # Python 3.9+, no pip install needed
+node server.js      # Node 18+, no npm install needed
+python server.py    # Python 3.9+, no pip install needed
 # or
 docker build -t praesago-mcp . && docker run -i praesago-mcp
 ```
 
-Set `PRAESAGO_API_KEY` in the environment to unlock full area context.
+Set `PRAESAGO_API_KEY` in the environment to send your key with each call.
 
-## Tools
+## Example questions
 
-| Tool | Access | What it does |
-|---|---|---|
-| `get_area_score` | Free | Trajectory Score (0–100), national percentile, gentrification early-warning stage and measured historical calibration for any postcode district or full postcode |
-| `search_areas` | Free | Screen all 2,292 districts by minimum score, region and maximum median price |
-| `compare_areas` | Free | Two districts side by side |
-| `get_area_context` | API key | Full area payload: demographics, income, tenure, deprivation (IMD), health, education, broadband, flood risk, council tax, politics, 12-month prices |
-| `search` / `fetch` | Free / key | Aliases for ChatGPT deep-research connector compatibility |
-
-Free tier: 30 calls/day, no key needed. Full access: add a
-[Praesago API key](https://praesago.com/pricing) as `Authorization: Bearer`
-or `X-API-Key`.
-
-## Honesty notes
-
-The Trajectory Score measures the strength of signals that have **historically
-preceded** property price growth. It is a screening aid, not a prediction —
-and the server's instructions tell your assistant exactly that. Praesago
-publishes its full validation record, including the windows where the model
-failed: [praesago.com/validation](https://praesago.com/validation).
-
-Calibration (measured across ~36,700 backtested district-windows): districts
-scoring 60+ beat their county's median price growth in 63% of three-year
-windows; districts under 40 managed 37%.
-
-## Example prompts
-
-- "Is Walthamstow up and coming?"
-- "Find postcode districts in Greater Manchester under £250k with strong fundamentals"
-- "Compare E17 and N15 for a buy-to-let"
+- "What is the median sold price in E17, and how has it moved in 12 months?"
+- "Find districts in Wales with a median price under £150k and live rents above £700 a month."
+- "Compare E17 and N15 for a buy-to-let."
 
 ## Links
 
 - Docs: https://praesago.com/docs/mcp
-- Methodology: https://praesago.com/methodology
-- Validation: https://praesago.com/validation
 - REST API: https://praesago.com/developer
+- Examples: https://github.com/Praesago/praesago-mcp-examples
 
-Data sources: HM Land Registry, ONS, police.uk, DfE, Environment Agency,
-Ofcom, DLUHC and more (Crown copyright / OGL). Coverage: England & Wales.
+Data sources include HM Land Registry, ONS, police.uk, DfE, Environment Agency, Ofcom and DLUHC (Crown copyright, Open Government Licence).
