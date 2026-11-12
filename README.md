@@ -1,6 +1,6 @@
 # Praesago MCP Server
 
-UK property area data for England and Wales, for AI assistants and developers. Ask Claude, ChatGPT, Cursor or any MCP client for the facts about an area: sold prices, rents, crime, flood risk, schools, deprivation and the live listings market. Every figure carries its source year or date. It describes areas as they are and does not forecast prices.
+Property-area data for every postcode district in England and Wales, for AI assistants and developers. Ask Claude, ChatGPT, Cursor or any MCP client for the facts about an area: sold prices, rents, crime, flood risk, schools, deprivation and the live listings market. Every figure carries its source year or date. It describes areas as they are and does not forecast prices.
 
 This is a **hosted (remote) MCP server**. There is nothing to install.
 
